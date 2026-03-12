@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ספר המתכונים שלי - מתכונים עם קריאה קולית</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Login Screen -->
+        <div id="loginScreen" class="screen active">
+            <div class="login-hero">
+                <div class="hero-overlay"></div>
+                <div class="login-content">
+                    <div class="login-box">
+                        <div class="logo">
+                            <span class="logo-icon">👨‍🍳</span>
+                            <h1>ספר המתכונים שלי</h1>
+                        </div>
+                        <div class="form-group">
+                            <label>שם משתמש</label>
+                            <input type="text" id="username" placeholder="הכנס שם משתמש">
+                        </div>
+                        <div class="form-group">
+                            <label>סיסמה</label>
+                            <input type="password" id="password" placeholder="הכנס סיסמה">
+                        </div>
+                        <button class="btn-primary" onclick="login()">התחבר</button>
+                        <p id="loginError" class="error"></p>
+                        <button class="btn-reset" onclick="resetData()">🔄 איפוס נתונים</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recipe List Screen -->
+        <div id="recipeListScreen" class="screen recipe-list-bg">
+            <div class="header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <span class="logo-icon">👨‍🍳</span>
+                        <h1>המתכונים שלי</h1>
+                    </div>
+                    <div class="header-buttons">
+                        <button class="btn-icon" onclick="resetData()" title="איפוס נתונים">🔄</button>
+                        <button class="btn-icon" onclick="showSettings()" title="הגדרות">⚙️</button>
+                        <button class="btn-icon" onclick="logout()" title="יציאה">🚪</button>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="search-section">
+                    <div class="search-bar">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="searchInput" placeholder="חפש מתכון..." oninput="searchRecipes()">
+                    </div>
+                    <button class="btn-add" onclick="showAddRecipe()">➕ הוסף מתכון חדש</button>
+                </div>
+                <div id="recipeList" class="recipe-grid"></div>
+            </div>
+        </div>
+
+        <!-- Settings Screen -->
+        <div id="settingsScreen" class="screen">
+            <div class="header">
+                <div class="header-content">
+                    <h1>⚙️ הגדרות אישיות</h1>
+                    <button class="btn-back" onclick="showRecipeList()">🔙 חזור</button>
+                </div>
+            </div>
+            <div class="container">
+                <div class="settings-grid">
+                    <div class="setting-card">
+                        <div class="setting-icon">⏱️</div>
+                        <label>זמן המתנה בין שורות (שניות)</label>
+                        <input type="number" id="readingDelay" min="0" max="10" step="0.5" value="2">
+                    </div>
+                    <div class="setting-card">
+                        <div class="setting-icon">🎨</div>
+                        <label>ערכת נושא</label>
+                        <select id="themeSelect" onchange="changeTheme()">
+                            <option value="light">בהיר</option>
+                            <option value="dark">כהה</option>
+                        </select>
+                    </div>
+                    <div class="setting-card">
+                        <div class="setting-icon">📏</div>
+                        <label>גודל טקסט</label>
+                        <select id="fontSizeSelect" onchange="changeFontSize()">
+                            <option value="small">קטן</option>
+                            <option value="medium">בינוני</option>
+                            <option value="large">גדול</option>
+                        </select>
+                    </div>
+                    <div class="setting-card">
+                        <div class="setting-icon">🔊</div>
+                        <label>מהירות קריאה</label>
+                        <div class="range-container">
+                            <input type="range" id="speechRate" min="0.5" max="2" step="0.1" value="1">
+                            <span id="rateValue" class="range-value">1</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-primary btn-save" onclick="saveSettings()">💾 שמור הגדרות</button>
+            </div>
+        </div>
+
+        <!-- Recipe Display Screen -->
+        <div id="recipeScreen" class="screen">
+            <div class="header">
+                <div class="header-content">
+                    <h1 id="recipeTitle"></h1>
+                    <button class="btn-back" onclick="showRecipeList()">🔙 חזור</button>
+                </div>
+            </div>
+            <div class="container">
+                <img id="recipeImage" class="recipe-hero-image" alt="">
+                <div class="recipe-content-wrapper">
+                    <div class="recipe-section">
+                        <h2>🥘 מרכיבים</h2>
+                        <ul id="ingredientsList" class="ingredients-list"></ul>
+                    </div>
+                    <div class="recipe-section">
+                        <h2>👨‍🍳 אופן ההכנה</h2>
+                        <ol id="instructionsList" class="instructions-list"></ol>
+                    </div>
+                </div>
+                <div class="controls-section">
+                    <div class="controls">
+                        <button id="playPauseBtn" class="btn-control btn-play" onclick="toggleReading()">▶️ התחל קריאה</button>
+                        <button class="btn-control btn-restart" onclick="restartReading()">⟳ התחל מההתחלה</button>
+                        <button class="btn-control btn-stop" onclick="stopReading()">⏹️ עצור</button>
+                    </div>
+                    <div id="currentLine" class="current-line"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Recipe Screen -->
+        <div id="addRecipeScreen" class="screen">
+            <div class="header">
+                <div class="header-content">
+                    <h1>➕ הוסף מתכון חדש</h1>
+                    <button class="btn-back" onclick="showRecipeList()">🔙 חזור</button>
+                </div>
+            </div>
+            <div class="container">
+                <div class="form-card">
+                    <div class="form-group">
+                        <label>🍽️ שם המתכון</label>
+                        <input type="text" id="newRecipeName" placeholder="לדוגמה: פסטה ברוטב עגבניות">
+                    </div>
+                    <div class="form-group">
+                        <label>🖼️ קישור לתמונה (אופציונלי)</label>
+                        <input type="text" id="newRecipeImage" placeholder="images/my-recipe.jpg או https://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>🥘 מרכיבים (אחד בכל שורה)</label>
+                        <textarea id="newRecipeIngredients" rows="6" placeholder="500 גרם פסטה
+400 גרם עגבניות מרוסקות
+3 שיני שום"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>👨‍🍳 אופן ההכנה (שלב בכל שורה)</label>
+                        <textarea id="newRecipeInstructions" rows="8" placeholder="הרתיחו מים במסיר גדול
+בשלו את הפסטה לפי ההוראות
+הוסיפו את הרוטב"></textarea>
+                    </div>
+                    <button class="btn-primary" onclick="addRecipe()">➕ הוסף מתכון</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
