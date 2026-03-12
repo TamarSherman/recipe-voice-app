@@ -4,7 +4,7 @@
 
 ## 🔗 קישורים לפרויקט
 * **קישור לאתר ב-Netlify (חי):** [cook-together.netlify.app](https://cook-together.netlify.app/)
-* **קישור לאתר ב-GitHub Pages:** [tamarsherman.github.io/recipe-voice-app](https://tamarsherman.github.io/recipe-voice-app/recipe-website/)
+* **קישור לאתר ב-GitHub Pages:** [tamarsherman.github.io/recipe-voice-app](https://tamarsherman.github.io/recipe-voice-app/)
 
 ---
 
